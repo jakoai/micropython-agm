@@ -62,5 +62,17 @@ list(APPEND EXTRA_COMPONENT_DIRS main_${IDF_TARGET})
 # Enable the panic handler wrapper
 idf_build_set_property(LINK_OPTIONS "-Wl,--wrap=esp_panic_handler" APPEND)
 
+# Include LVGL component, ignore KCONFIG
+
+idf_build_set_property(LV_MICROPYTHON 1)
+#idf_build_component(${CMAKE_SOURCE_DIR}/../../lib/lv_binding/lvgl)
+
+list(APPEND EXTRA_COMPONENT_DIRS ${CMAKE_SOURCE_DIR}/../../lib/lv_binding/lvgl)
+
+idf_build_set_property(COMPILE_DEFINITIONS "-DLV_KCONFIG_IGNORE" APPEND)
+separate_arguments(LV_CFLAGS_ENV UNIX_COMMAND $ENV{LV_CFLAGS})
+idf_build_set_property(COMPILE_DEFINITIONS "${LV_CFLAGS}" APPEND)
+idf_build_set_property(COMPILE_OPTIONS "-Wno-unused-function" APPEND)
+
 # Define the project.
 project(micropython)

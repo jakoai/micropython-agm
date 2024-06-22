@@ -91,6 +91,11 @@ list(APPEND MICROPY_SOURCE_PORT
 list(TRANSFORM MICROPY_SOURCE_PORT PREPEND ${MICROPY_PORT_DIR}/)
 list(APPEND MICROPY_SOURCE_PORT ${CMAKE_BINARY_DIR}/pins.c)
 
+# Include LVGL bindings rules
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+    include(${MICROPY_DIR}/lib/lv_binding/mkrules.cmake)
+endif()
+
 list(APPEND MICROPY_SOURCE_QSTR
     ${MICROPY_SOURCE_PY}
     ${MICROPY_SOURCE_EXTMOD}
@@ -99,6 +104,7 @@ list(APPEND MICROPY_SOURCE_QSTR
     ${MICROPY_SOURCE_LIB}
     ${MICROPY_SOURCE_PORT}
     ${MICROPY_SOURCE_BOARD}
+    ${LV_SRC}
 )
 
 list(APPEND IDF_COMPONENTS
@@ -134,6 +140,8 @@ list(APPEND IDF_COMPONENTS
     spi_flash
     ulp
     vfs
+    esp_http_client
+    esp-tls
 )
 
 # Register the main IDF component.
@@ -146,11 +154,13 @@ idf_component_register(
         ${MICROPY_SOURCE_DRIVERS}
         ${MICROPY_SOURCE_PORT}
         ${MICROPY_SOURCE_BOARD}
+        ${LV_SRC}
     INCLUDE_DIRS
         ${MICROPY_INC_CORE}
         ${MICROPY_INC_USERMOD}
         ${MICROPY_PORT_DIR}
         ${MICROPY_BOARD_DIR}
+        ${LV_INCLUDE}
         ${CMAKE_BINARY_DIR}
     LDFRAGMENTS
         linker.lf
@@ -176,6 +186,7 @@ target_compile_definitions(${MICROPY_TARGET} PUBLIC
     FFCONF_H=\"${MICROPY_OOFATFS_DIR}/ffconf.h\"
     LFS1_NO_MALLOC LFS1_NO_DEBUG LFS1_NO_WARN LFS1_NO_ERROR LFS1_NO_ASSERT
     LFS2_NO_MALLOC LFS2_NO_DEBUG LFS2_NO_WARN LFS2_NO_ERROR LFS2_NO_ASSERT
+    LV_KCONFIG_IGNORE
 )
 
 # Disable some warnings to keep the build output clean.
@@ -230,3 +241,7 @@ add_custom_command(
     VERBATIM
     COMMAND_EXPAND_LISTS
 )
+
+# Add lv_bindings rules
+
+all_lv_bindings()

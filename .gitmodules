@@ -68,3 +68,9 @@
 [submodule "lib/arduino-lib"]
 	path = lib/arduino-lib
 	url = https://github.com/arduino/arduino-lib-mpy.git
+[submodule "lib/lv_binding_micropython"]
+	path = lib/lv_binding/
+	url = https://github.com:jakoai/lv_binding_micropython.git
+[submodule "lib/lv_binding"]
+	path = lib/lv_binding
+	url = https://github.com/jakoai/lv_binding_micropython
