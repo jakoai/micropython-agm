@@ -19,6 +19,8 @@ Supported features include:
 
 Initial development of this ESP32 port was sponsored in part by Microbric Pty Ltd.
 
+!!!change file "env_support/cmake/esp.cmake" in lvgl main to main_esp32s3
+
 Setting up ESP-IDF and the build environment
 --------------------------------------------
 
