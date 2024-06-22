@@ -1,9 +1,9 @@
 /*
- * This file is part of the MicroPython project, http://micropython.org/
+ * This file is part of the MicroPython project, https://micropython.org/
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Linaro Limited
+ * Copyright (c) 2024 Alessandro Gatti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <zephyr/zephyr.h>
-#include <zephyr/console/console.h>
-#include "zephyr_getchar.h"
 
-int real_main(void);
+// RISC-V RV32 specific stuff
 
-void main(void) {
-    #ifdef CONFIG_CONSOLE_SUBSYS
-    console_init();
-    #else
-    zephyr_getchar_init();
-    #endif
-    real_main();
-}
+#include "py/mpconfig.h"
+
+#if MICROPY_EMIT_RV32
+
+// this is defined so that the assembler exports generic assembler API macros
+#define GENERIC_ASM_API (1)
+#include "py/asmrv32.h"
+
+// Word indices of REG_LOCAL_x in nlr_buf_t
+#define NLR_BUF_IDX_LOCAL_1 (6) // S3
+
+#define N_RV32 (1)
+#define EXPORT_FUN(name) emit_native_rv32_##name
+#include "py/emitnative.c"
+
+#endif

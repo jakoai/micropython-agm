@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Linaro Limited
+ * Copyright (c) 2016-2018 Damien P. George
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <zephyr/zephyr.h>
-#include <zephyr/console/console.h>
-#include "zephyr_getchar.h"
 
-int real_main(void);
+#include <stddef.h>
 
-void main(void) {
-    #ifdef CONFIG_CONSOLE_SUBSYS
-    console_init();
-    #else
-    zephyr_getchar_init();
-    #endif
-    real_main();
-}
+#include "uart.h"
+
+#define mp_hal_stdin_rx_chr() (0)
+#define mp_hal_stdout_tx_strn_cooked(s, l) uart_tx_strn((s), (l))

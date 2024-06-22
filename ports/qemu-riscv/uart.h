@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Linaro Limited
+ * Copyright (c) 2018 Damien P. George
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <zephyr/zephyr.h>
-#include <zephyr/console/console.h>
-#include "zephyr_getchar.h"
 
-int real_main(void);
+#ifndef MICROPY_INCLUDED_QEMU_RISCV_UART_H
+#define MICROPY_INCLUDED_QEMU_RISCV_UART_H
 
-void main(void) {
-    #ifdef CONFIG_CONSOLE_SUBSYS
-    console_init();
-    #else
-    zephyr_getchar_init();
-    #endif
-    real_main();
-}
+void uart_init(void);
+void uart_tx_strn(const char *buf, size_t len);
+
+#endif // MICROPY_INCLUDED_QEMU_RISCV_UART_H

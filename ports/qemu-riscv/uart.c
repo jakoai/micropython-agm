@@ -3,7 +3,7 @@
  *
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Linaro Limited
+ * Copyright (c) 2023 Alessandro Gatti
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <zephyr/zephyr.h>
-#include <zephyr/console/console.h>
-#include "zephyr_getchar.h"
 
-int real_main(void);
+#include <stdio.h>
+#include <stddef.h>
 
-void main(void) {
-    #ifdef CONFIG_CONSOLE_SUBSYS
-    console_init();
-    #else
-    zephyr_getchar_init();
-    #endif
-    real_main();
+#include "uart.h"
+
+#if defined(QEMU_SOC_VIRT)
+
+volatile unsigned char *uart_buffer = (volatile unsigned char *)0x10000000;
+
+void uart_init(void) {
 }
+
+void uart_tx_strn(const char *buffer, size_t length) {
+    for (size_t index = 0; index < length; index++) {
+        *uart_buffer = buffer[index];
+    }
+}
+
+#endif // QEMU_SOC_VIRT
