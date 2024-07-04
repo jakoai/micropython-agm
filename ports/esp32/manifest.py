@@ -1,0 +1,1 @@
+freeze("$(LIB_DIR)/lv_binding/lib")
